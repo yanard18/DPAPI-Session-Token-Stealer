@@ -1,53 +1,27 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/yanard18/cookiemonster"
 )
 
-type Args struct {
-	StateFile   string
-	CookiesFile string
-}
-
-func parseArgs() Args {
-	var args Args
-	flag.StringVar(&args.StateFile, "state", "", "path to the state file")
-	flag.StringVar(&args.CookiesFile, "cookies", "", "path to the cookies file")
-	flag.Parse()
-	return args
-}
-
 func main() {
-	args := parseArgs()
-
-	if _, err := os.Stat(args.StateFile); os.IsNotExist(err) {
-		fmt.Println("State file does not exist")
-		os.Exit(1)
-		return
-	}
-
-	if _, err := os.Stat((args.CookiesFile)); os.IsNotExist(err) {
-		fmt.Println("Cookies file does not exist")
-		os.Exit(1)
-		return
+	args, err := cookiemonster.ParseArgs()
+	if err != nil {
+		log.Fatalf("Error parsing arguments: %v", err)
 	}
 
 	encryptedKey, err := cookiemonster.ParseLocalState(args.StateFile)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-		return
+		log.Fatalf("Error parsing local state file: %v", err)
 	}
 
 	key, err := cookiemonster.DecryptDPAPI(encryptedKey)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-		return
+		log.Fatalf("Error decrypting DPAPI blob of local state encrypted key: %v", err)
 	}
 
 	if args.CookiesFile != "" {
