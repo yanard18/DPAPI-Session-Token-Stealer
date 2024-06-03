@@ -3,6 +3,8 @@ package cookiemonster
 import (
 	"fmt"
 	"log"
+
+	"github.com/yanard18/cookiemonster/internal/decryption"
 )
 
 func PrintCookies(stateFile, cookiesFile string) (string, error) {
@@ -12,7 +14,7 @@ func PrintCookies(stateFile, cookiesFile string) (string, error) {
 		return "", err
 	}
 
-	key, err := DecryptDPAPI(encryptedKey)
+	key, err := decryption.DecryptDPAPI(encryptedKey)
 	if err != nil {
 		log.Printf("[-] Error decrypting DPAPI blob of local state encrypted key: %v\n", err)
 		return "", err
@@ -29,7 +31,7 @@ func PrintCookies(stateFile, cookiesFile string) (string, error) {
 	for _, cookie := range cookies {
 
 		// Decrypt the cookie value
-		decrypted, err := DecryptEncryptedCookieValue([]byte(cookie.Value), key)
+		decrypted, err := decryption.DecryptEncryptedCookieValue([]byte(cookie.Value), key)
 		if err != nil {
 			log.Printf("[-] Error decrypting cookie value: %v\n", err)
 			continue

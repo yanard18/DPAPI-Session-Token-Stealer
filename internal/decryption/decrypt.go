@@ -1,4 +1,4 @@
-package cookiemonster
+package decryption
 
 import (
 	"crypto/aes"

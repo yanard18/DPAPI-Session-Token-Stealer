@@ -1,4 +1,4 @@
-package cookiemonster
+package browser
 
 import (
 	"fmt"

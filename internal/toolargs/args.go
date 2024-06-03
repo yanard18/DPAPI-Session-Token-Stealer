@@ -1,4 +1,4 @@
-package cookiemonster
+package toolargs
 
 import (
 	"flag"

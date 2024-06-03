@@ -6,6 +6,25 @@ import (
 	"os"
 
 	"github.com/yanard18/cookiemonster"
+	"github.com/yanard18/cookiemonster/internal/browser"
+	"github.com/yanard18/cookiemonster/internal/toolargs"
+)
+
+const (
+	AsciiArt = ` ::::::::   ::::::::   ::::::::  :::    ::: ::::::::::: ::::::::::              
+:+:    :+: :+:    :+: :+:    :+: :+:   :+:      :+:     :+:                     
++:+        +:+    +:+ +:+    +:+ +:+  +:+       +:+     +:+                     
++#+        +#+    +:+ +#+    +:+ +#++:++        +#+     +#++:++#                
++#+        +#+    +#+ +#+    +#+ +#+  +#+       +#+     +#+                     
+#+#    #+# #+#    #+# #+#    #+# #+#   #+#      #+#     #+#                     
+ ########   ########   ########  ###    ### ########### ##########              
+::::    ::::   ::::::::  ::::    :::  :::::::: ::::::::::: :::::::::: ::::::::: 
++:+:+: :+:+:+ :+:    :+: :+:+:   :+: :+:    :+:    :+:     :+:        :+:    :+:
++:+ +:+:+ +:+ +:+    +:+ :+:+:+  +:+ +:+           +:+     +:+        +:+    +:+
++#+  +:+  +#+ +#+    +:+ +#+ +:+ +#+ +#++:++#++    +#+     +#++:++#   +#++:++#: 
++#+       +#+ +#+    +#+ +#+  +#+#+#        +#+    +#+     +#+        +#+    +#+
+#+#       #+# #+#    #+# #+#   #+#+# #+#    #+#    #+#     #+#        #+#    #+#
+###       ###  ########  ###    ####  ########     ###     ########## ###    ###`
 )
 
 var (
@@ -23,7 +42,7 @@ type CookieFilesPair struct {
 }
 
 func main() {
-	args, err := cookiemonster.ParseArgs()
+	args, err := toolargs.ParseArgs()
 	if err != nil {
 		log.Fatalf("Error parsing arguments: %v", err)
 	}
@@ -39,15 +58,15 @@ func main() {
 	}
 
 	log.SetFlags(0)
-	log.Println(cookiemonster.AsciiArt)
+	log.Println(AsciiArt)
 
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 
 	if args.KillBrowsers {
 		log.Println("[*] Killing browser processes")
-		cookiemonster.KillEdgeProcess()
-		cookiemonster.KillChromeProcess()
-		cookiemonster.KillBraveProcess()
+		browser.KillEdgeProcess()
+		browser.KillChromeProcess()
+		browser.KillBraveProcess()
 		// cookiemonster.KillFirefoxProcess() it's not chromium based
 	}
 
