@@ -23,18 +23,9 @@ type CookieFilesPair struct {
 }
 
 func main() {
-
 	args, err := cookiemonster.ParseArgs()
 	if err != nil {
 		log.Fatalf("Error parsing arguments: %v", err)
-	}
-
-	if args.KillBrowsers {
-		log.Println("[*] Killing browser processes")
-		cookiemonster.KillEdgeProcess()
-		cookiemonster.KillChromeProcess()
-		cookiemonster.KillBraveProcess()
-		// cookiemonster.KillFirefoxProcess() it's not chromium based
 	}
 
 	if args.Output != "" {
@@ -45,6 +36,19 @@ func main() {
 		defer f.Close()
 
 		log.SetOutput(f)
+	}
+
+	log.SetFlags(0)
+	log.Println(cookiemonster.AsciiArt)
+
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
+
+	if args.KillBrowsers {
+		log.Println("[*] Killing browser processes")
+		cookiemonster.KillEdgeProcess()
+		cookiemonster.KillChromeProcess()
+		cookiemonster.KillBraveProcess()
+		// cookiemonster.KillFirefoxProcess() it's not chromium based
 	}
 
 	var filePair []CookieFilesPair

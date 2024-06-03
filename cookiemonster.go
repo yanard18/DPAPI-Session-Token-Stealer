@@ -6,7 +6,6 @@ import (
 )
 
 func PrintCookies(stateFile, cookiesFile string) (string, error) {
-
 	encryptedKey, err := ParseLocalState(stateFile)
 	if err != nil {
 		log.Printf("[-] Error parsing local state file: %v\n", err)
