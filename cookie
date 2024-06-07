@@ -1,0 +1,39 @@
+ ::::::::   ::::::::   ::::::::  :::    ::: ::::::::::: ::::::::::              
+:+:    :+: :+:    :+: :+:    :+: :+:   :+:      :+:     :+:                     
++:+        +:+    +:+ +:+    +:+ +:+  +:+       +:+     +:+                     
++#+        +#+    +:+ +#+    +:+ +#++:++        +#+     +#++:++#                
++#+        +#+    +#+ +#+    +#+ +#+  +#+       +#+     +#+                     
+#+#    #+# #+#    #+# #+#    #+# #+#   #+#      #+#     #+#                     
+ ########   ########   ########  ###    ### ########### ##########              
+::::    ::::   ::::::::  ::::    :::  :::::::: ::::::::::: :::::::::: ::::::::: 
++:+:+: :+:+:+ :+:    :+: :+:+:   :+: :+:    :+:    :+:     :+:        :+:    :+:
++:+ +:+:+ +:+ +:+    +:+ :+:+:+  +:+ +:+           +:+     +:+        +:+    +:+
++#+  +:+  +#+ +#+    +:+ +#+ +:+ +#+ +#++:++#++    +#+     +#++:++#   +#++:++#: 
++#+       +#+ +#+    +#+ +#+  +#+#+#        +#+    +#+     +#+        +#+    +#+
+#+#       #+# #+#    #+# #+#   #+#+# #+#    #+#    #+#     #+#        #+#    #+#
+###       ###  ########  ###    ####  ########     ###     ########## ###    ###
+2024/06/03 13:20:21.349222 [*] Parsing cookies from C:\Users\Deniz\AppData\Local\Google\Chrome\User Data\Default\Network\Cookies
+2024/06/03 13:20:21.349222 [-] Error parsing local state file: failed to read state file: open C:\Users\Deniz\AppData\Local\Google\Chrome\User Data\Local State: The system cannot find the path specified.
+2024/06/03 13:20:21.349222 [-] Error parsing cookies: failed to read state file: open C:\Users\Deniz\AppData\Local\Google\Chrome\User Data\Local State: The system cannot find the path specified.
+
+2024/06/03 13:20:21.349222 [*] Parsing cookies from C:\Users\Deniz\AppData\Local\Microsoft\Edge\User Data\Default\Network\Cookies
+2024/06/03 13:20:22.813379 [-] Error parsing cookies: failed to query cookies: unable to open database file: out of memory (14)
+
+2024/06/03 13:20:22.813379 [*] Parsing cookies from C:\Users\Deniz\AppData\Local\BraveSoftware\Brave-Browser\User Data\Default\Network\Cookies
+2024/06/03 13:20:22.822312 [+] Found 1390 cookies
+2024/06/03 13:20:22.822312 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.822864 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.822864 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.822864 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.822864 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.822864 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823370 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823370 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823370 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823370 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823370 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823370 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823892 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823892 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:22.823892 [-] Error decrypting cookie value: invalid cookie value
+2024/06/03 13:20:28.611503 [+] Cookies saved to Cookies.sqlite3

