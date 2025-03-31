@@ -2,8 +2,6 @@
 
 A Go-based tool that extracts and decrypts session tokens (cookies) from Chromium-based browsers on Windows using the Data Protection API (DPAPI).
 
----
-
 ## 1. Features
 
 - **DPAPI Decryption:**  
@@ -21,8 +19,6 @@ A Go-based tool that extracts and decrypts session tokens (cookies) from Chromiu
   - Decryption logic
   - Output formatting (text and SQL)
 
----
-
 ## 2. Prerequisites
 
 - **Go:**  
@@ -33,8 +29,6 @@ A Go-based tool that extracts and decrypts session tokens (cookies) from Chromiu
 
 - **Windows OS:**  
   This tool leverages Windows DPAPI for decryption and is designed for Windows systems.
-
----
 
 ## 3. Installation Guide
 
@@ -58,8 +52,6 @@ Build the binary:
 go build -o dpapi-token-stealer
 ```
 
----
-
 ## 4. Usage
 
 Run the binary with the paths to your Local State file and Cookies SQLite file:
@@ -70,8 +62,6 @@ dpapi-token-stealer -state="path/to/Local State" -cookies="path/to/Cookies"
 
 This command will extract and decrypt the session tokens, displaying the details in the console. Use the available output modules to log in text format or save to an SQLite database.
 
----
-
 ## 5. Output Options
 
 - **Plain Text Logging:**  
@@ -80,7 +70,6 @@ This command will extract and decrypt the session tokens, displaying the details
 - **SQLite Database Output:**  
   Saves decrypted cookies to a new SQLite database using the SQL output module (see `sqlout.go`) for further inspection.
 
----
 
 ## 6. Code Structure
 
@@ -102,14 +91,10 @@ This command will extract and decrypt the session tokens, displaying the details
 - **internal/decryption:**  
   Implements the DPAPI decryption logic used to decrypt both the encryption key and cookie values.
 
----
-
 ## 7. Disclaimer
 
 > **Warning:**  
 > This tool is intended **for educational and research purposes only**. Unauthorized extraction of session tokens or unauthorized access to data is illegal. Use responsibly and only on systems you have explicit permission to test.
-
----
 
 ## 8. License
 
