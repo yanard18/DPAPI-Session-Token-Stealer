@@ -1,109 +1,63 @@
-# DPAPI Session Token Stealer
+# DPAPI-Session-Token-Stealer
 
-A Go-based tool that extracts and decrypts session tokens (cookies) from Chromium-based browsers on Windows using the Data Protection API (DPAPI).
+## Features
+- **Cookie Extraction**: Retrieves session cookies from Chromium-based browsers (Chrome, Edge, Brave) using DPAPI.
+- **Automatic and Manual Modes**: Can automatically extract from default locations or manually specified files.
+- **Browser Process Termination**: Optionally kills browser processes before extraction.
+- **Flexible Output Formats**: Saves extracted cookies as text or SQLite database.
 
-## 1. Features
+## Prerequisites
+- **Go** (latest version)
+- Windows OS (tested on Windows 10/11)
 
-- **DPAPI Decryption:**  
-  Utilizes Windows DPAPI to decrypt the encryption key from the Local State file and then decrypts the session tokens stored in the browser’s SQLite cookie database.
-
-- **SQLite Cookie Parsing:**  
-  Reads and parses cookie entries from an SQLite database, extracting details such as host, name, value, path, and metadata.
-
-- **Multiple Output Options:**  
-  Supports logging the decrypted cookies in plain text and saving them into an SQLite database for further analysis.
-
-- **Modular Design:**  
-  Organized with clear separation of functionality:
-  - Cookie extraction
-  - Decryption logic
-  - Output formatting (text and SQL)
-
-## 2. Prerequisites
-
-- **Go:**  
-  Go 1.15+ is required to build the project.
-
-- **SQLite:**  
-  The cookies file is an SQLite database; ensure your environment supports SQLite.
-
-- **Windows OS:**  
-  This tool leverages Windows DPAPI for decryption and is designed for Windows systems.
-
-## 3. Installation Guide
-
-### 3.1 System Dependencies (Windows)
-
-- Make sure your Windows system supports DPAPI (Data Protection API).  
-- No additional system packages are needed.
-
-### 3.2 Cloning and Building
-
-Clone the repository:
-
-```bash
+## Installation
+### 1. Clone the Repository
+```sh
 git clone https://github.com/yanard18/DPAPI-Session-Token-Stealer.git
 cd DPAPI-Session-Token-Stealer
 ```
 
-Build the binary using the provided Makefile:
-
-```bash
-make
+### 2. Install Dependencies
+Ensure Go modules are initialized and dependencies are installed:
+```sh
+go mod tidy
 ```
 
-Alternatively, you can manually build it:
+### 3. Build the Project
+```sh
+make build
+```
+This will generate `bin/cookie.exe`.
 
-```bash
-go clean
-go build -ldflags="-H windowsgui -w -s -buildid=" -trimpath -o bin/cookie.exe ./cmd/main.go
+## Usage
+### Running the Executable
+```sh
+bin/cookie.exe [OPTIONS]
 ```
 
-## 4. Usage
+### Command-Line Arguments
+- `--auto` : Automatically detects and extracts cookies from Chrome, Edge, and Brave.
+- `--state-file <path>` : Specify the `Local State` file path.
+- `--cookies-file <path>` : Specify the `Cookies` database file path.
+- `--output <file>` : Save extracted cookies to a specified file.
+- `--format <text/sql>` : Choose output format (default: text, alternative: SQLite database).
+- `--kill-browsers` : Kills browser processes before extraction.
 
-Run the binary with the paths to your Local State file and Cookies SQLite file:
-
-```bash
-dpapi-token-stealer -state="path/to/Local State" -cookies="path/to/Cookies"
+### Example Commands
+#### Auto Mode (Extract from Default Locations)
+```sh
+bin/cookie.exe --auto --format sql --output cookies.sqlite3
 ```
 
-This command will extract and decrypt the session tokens, displaying the details in the console. Use the available output modules to log in text format or save to an SQLite database.
+#### Manual Mode (Specify File Paths)
+```sh
+bin/cookie.exe --state-file "C:\\Users\\User\\AppData\\Local\\Google\\Chrome\\User Data\\Local State" --cookies-file "C:\\Users\\User\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Network\\Cookies"
+```
 
-## 5. Output Options
+#### Kill Browsers and Extract Cookies
+```sh
+bin/cookie.exe --kill-browsers --auto
+```
 
-- **Plain Text Logging:**  
-  Uses the built-in text output module (see `textout.go`) to print decrypted cookie details on the console.
-
-- **SQLite Database Output:**  
-  Saves decrypted cookies to a new SQLite database using the SQL output module (see `sqlout.go`) for further inspection.
-
-
-## 6. Code Structure
-
-- **cookiemonster.go:**  
-  Contains the main function to retrieve and decrypt cookies.
-
-- **cookies.go:**  
-  Handles parsing of the cookies database file and mapping of cookie attributes.
-
-- **localstate.go:**  
-  Parses the Local State file to extract the DPAPI encrypted key, then strips the DPAPI prefix.
-
-- **sqlout.go:**  
-  Provides functionality to save decrypted cookies into an SQLite database.
-
-- **textout.go:**  
-  Logs decrypted cookie information in a human-readable text format.
-
-- **internal/decryption:**  
-  Implements the DPAPI decryption logic used to decrypt both the encryption key and cookie values.
-
-## 7. Disclaimer
-
-> **Warning:**  
-> This tool is intended **for educational and research purposes only**. Unauthorized extraction of session tokens or unauthorized access to data is illegal. Use responsibly and only on systems you have explicit permission to test.
-
-## 8. License
-
-This project is released under the [LICENSE NAME] License.  
-*(Replace `[LICENSE NAME]` with the appropriate license if available.)*
+## Disclaimer
+This project is for educational and research purposes only. Use at your own risk.
