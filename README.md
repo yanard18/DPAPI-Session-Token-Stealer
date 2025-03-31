@@ -2,6 +2,34 @@
 
 A Golang-based tool for extracting and decrypting cookies from Chromium-based browsers using DPAPI. 
 
+## **Learned Key Points**
+
+### **1. Where Encrypted Cookies Are Stored**
+Encrypted cookies for Chromium-based browsers are typically stored in the following locations:
+
+- **Google Chrome**:  
+  - `C:\Users\%USERNAME%\AppData\Local\Google\Chrome\User Data\Default\Network\Cookies`  
+  - `C:\Users\%USERNAME%\AppData\Local\Google\Chrome\User Data\Local State` (contains encryption key)  
+
+- **Microsoft Edge**:  
+  - `C:\Users\%USERNAME%\AppData\Local\Microsoft\Edge\User Data\Default\Network\Cookies`  
+  - `C:\Users\%USERNAME%\AppData\Local\Microsoft\Edge\User Data\Local State`  
+
+- **Brave Browser**:  
+  - `C:\Users\%USERNAME%\AppData\Local\BraveSoftware\Brave-Browser\User Data\Default\Network\Cookies`  
+  - `C:\Users\%USERNAME%\AppData\Local\BraveSoftware\Brave-Browser\User Data\Local State`  
+
+The `Cookies` file is an SQLite database containing encrypted cookie data, while the `Local State` file holds the encryption key.
+
+### **2. Why Windows DPAPI Encryption Is Used**
+Windows **Data Protection API (DPAPI)** is a built-in Windows encryption mechanism that allows applications to store sensitive data securely. Chromium-based browsers use DPAPI to encrypt stored cookies for security reasons:
+
+- **Tied to User Profile**: DPAPI encryption is linked to the Windows user account, making decryption difficult without access to the same profile.  
+- **Automatic Key Management**: The Windows OS manages encryption keys internally, preventing the need for manual key storage.  
+- **Secure Against External Access**: Even if an attacker gains access to the cookie database, they cannot decrypt the data without retrieving the DPAPI key from the `Local State` file under the same Windows profile.
+
+This project bypasses this security by extracting and using the stored DPAPI key to decrypt the cookies.
+
 ## Features
 - **Cookie Extraction**: Retrieves session cookies from Chromium-based browsers (Chrome, Edge, Brave) using DPAPI.
 - **Automatic and Manual Modes**: Can automatically extract from default locations or manually specified files.
