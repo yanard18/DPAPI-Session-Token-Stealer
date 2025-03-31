@@ -1,5 +1,7 @@
 # DPAPI-Session-Token-Stealer
 
+A Golang-based tool for extracting and decrypting cookies from Chromium-based browsers using DPAPI. 
+
 ## Features
 - **Cookie Extraction**: Retrieves session cookies from Chromium-based browsers (Chrome, Edge, Brave) using DPAPI.
 - **Automatic and Manual Modes**: Can automatically extract from default locations or manually specified files.
